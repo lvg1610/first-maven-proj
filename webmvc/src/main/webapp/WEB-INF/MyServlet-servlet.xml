@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+        
+     <!-- <context:component-scan base-package="com.lvg.webmvc.dao"/>-->
+     <context:component-scan base-package="com.lvg.mvc"/>
+     <bean id="dataSource"    class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName"   value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url"   value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username"  value="scott"/>
+        <property name="password"   value="tiger"/>
+     </bean>   
+     <bean id="emFactory"  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource"  ref="dataSource"/>
+        <property name="persistenceProviderClass"   value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        <property name="packagesToScan"   value="com.lvg.webmvc"/>
+        <property name="jpaPropertyMap">
+           <map>
+              <entry key="hibernate.dialect"  value="org.hibernate.dialect.Oracle10gDialect"/>
+              <entry key="hibernate.show_sql"   value="true"/>
+           </map>
+        </property>
+     </bean>
+     <bean id="transactionManager"   class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory"   ref="emFactory"/>
+     </bean>
+     <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>
